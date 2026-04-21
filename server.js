@@ -190,6 +190,27 @@ io.on('connection', (socket) => {
   });
 });
 
+// ─── STATIC FIX & CATCH-ALL ───────────────────────────
+// Just in case files were uploaded directly to the root instead of the 'public' folder
+app.use(express.static(__dirname)); 
+
+app.get('*', (req, res) => {
+  const publicIndex = path.join(__dirname, 'public', 'index.html');
+  const rootIndex = path.join(__dirname, 'index.html');
+  
+  if (fs.existsSync(publicIndex)) {
+    res.sendFile(publicIndex);
+  } else if (fs.existsSync(rootIndex)) {
+    res.sendFile(rootIndex);
+  } else {
+    res.send(`
+      <h2>Server is running! But index.html is missing.</h2>
+      <p>Error: The 'public' folder containing your index.html was not found on GitHub.</p>
+      <p>Please make sure you uploaded the entire <b>public</b> folder into your GitHub repository.</p>
+    `);
+  }
+});
+
 // ─── START ────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`🚀 Snappic Live running on http://localhost:${PORT}`));
