@@ -194,7 +194,7 @@ io.on('connection', (socket) => {
 // Just in case files were uploaded directly to the root instead of the 'public' folder
 app.use(express.static(__dirname)); 
 
-app.get('*', (req, res) => {
+app.use((req, res) => {
   const publicIndex = path.join(__dirname, 'public', 'index.html');
   const rootIndex = path.join(__dirname, 'index.html');
   
