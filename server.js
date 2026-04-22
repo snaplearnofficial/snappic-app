@@ -25,10 +25,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ─── DATABASE (MONGODB) ──────────────────────────────────────────
 const MONGO_URI = process.env.MONGO_URI;
 
-mongoose.connect(MONGO_URI || 'mongodb://127.0.0.1:27017/snappic', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => console.log('✅ Connected to MongoDB!'))
+mongoose.connect(MONGO_URI || 'mongodb://127.0.0.1:27017/snappic')
+  .then(() => console.log('✅ Connected to MongoDB!'))
   .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
 // Schemas
