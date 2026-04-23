@@ -19,9 +19,21 @@ const io = new Server(server, {
 
 // Middleware
 app.use(cors({ origin: '*' }));
-app.use(express.json({ limit: '50mb' })); // Increased limit for base64 images
+app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Ultimate Path Finder
+let publicPath = path.join(__dirname, 'public');
+if (!fs.existsSync(path.join(publicPath, 'index.html'))) {
+    publicPath = path.join(__dirname, 'snappic-live', 'public');
+}
+if (!fs.existsSync(path.join(publicPath, 'index.html'))) {
+    console.log("❌ CRITICAL ERROR: index.html not found anywhere!");
+    console.log("Current Dir:", __dirname);
+    console.log("Files here:", fs.readdirSync(__dirname));
+}
+
+app.use(express.static(publicPath));
 
 // ─── DATABASE (MONGODB) ──────────────────────────────────────────
 const MONGO_URI = process.env.MONGO_URI;
@@ -334,7 +346,7 @@ io.on('connection', (socket) => {
 
 // Serve Frontend Fallback
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(publicPath, 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
