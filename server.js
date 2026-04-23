@@ -332,8 +332,8 @@ io.on('connection', (socket) => {
   });
 });
 
-// Serve Frontend
-app.get('(.*)', (req, res) => {
+// Serve Frontend Fallback
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
